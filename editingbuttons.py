@@ -7,10 +7,21 @@ class EditingButtons(Frame):
     def __init__(self,master=None):
         Frame.__init__(self,master=master)
         
-        def NewPictureImported(self):
-            pass
+        def NewPictureImported():
+            filename = filedialog.askopenfilename()
+            image = cv2.imread(filename)
+
+            if image is not None:
+                self.master.filename = filename
+                self.master.OriginalImage = image.copy()
+                self.master.EditedImage = image.copy()
+                self.master.viewimage.show_image()
+
         def SavePicture(self):
-            pass
+            SavedImage = self.master.EditedImage
+            image_name = self.master.filename
+            cv2.imwrite(image_name, SavedImage)
+
         def SavePictureAs(self):
             pass
 
@@ -24,17 +35,12 @@ class EditingButtons(Frame):
         fileMenu.add_command(label="Exit")
         menu.add_cascade(label="File", menu=fileMenu)
 
-        self.Addtext_button = Button(self , text='Add Text')
-        self.Draw_button    = Button(self , text='Draw'    )
-        self.Crop_button    = Button(self , text='Crop'    )
-        self.Adjust_button  = Button(self , text='Adjust'  )
-        self.Filters_button = Button(self , text='Filter'  ) 
-        self.Clear_button   = Button(self , text='Clear'   )
-        self.Addtext_button.pack(side=LEFT)
-        self.Draw_button   .pack(side=LEFT)
-        self.Crop_button   .pack(side=LEFT)
-        self.Adjust_button .pack(side=LEFT)
-        self.Filters_button.pack(side=LEFT) 
-        self.Clear_button  .pack()
+        self.Addtext_button = Button(self , text='Add Text').pack(side=LEFT)
+        self.Draw_button    = Button(self , text='Draw'    ).pack(side=LEFT)
+        self.Crop_button    = Button(self , text='Crop'    ).pack(side=LEFT)
+        self.Adjust_button  = Button(self , text='Adjust'  ).pack(side=LEFT)
+        self.Filters_button = Button(self , text='Filter'  ).pack(side=LEFT) 
+        self.Clear_button   = Button(self , text='Clear'   ).pack()
+        
 
 
