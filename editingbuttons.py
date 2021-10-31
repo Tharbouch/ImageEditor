@@ -42,5 +42,5 @@ class EditingButtons(Frame):
         self.Filters_button = Button(self , text='Filter'  ).pack(side=LEFT) 
         self.Clear_button   = Button(self , text='Clear'   ).pack()
         
-
+        
 

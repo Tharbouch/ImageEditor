@@ -17,10 +17,10 @@ class Main(Tk):
         self.buttons.pack(pady=25)
         
         separator = ttk.Separator(master=self, orient=HORIZONTAL)
-        separator.pack(fill=X ,padx=20)
+        separator.pack(fill=X ,padx=10 , pady=20)
 
         self.viewimage = ShowImage(master=self)
-        self.viewimage.pack(fill=BOTH ,padx=20, pady=50)
+        self.viewimage.pack(fill=BOTH ,padx=20,expand=1)
         
 window = Main()
 window.mainloop()

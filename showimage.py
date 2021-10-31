@@ -7,7 +7,7 @@ class ShowImage(Frame):
 
         Frame.__init__(self,master=master, width=1280 , height= 800)
         self.shown_image = None
-        self.canvas = Canvas(self, bg="white", width=1024, height=800)
+        self.canvas = Canvas(self, width=1024, height=800)
         self.canvas.place(relx = 0.5 , rely=0.45, anchor=CENTER)
     
     def show_image(self, img=None):
@@ -38,5 +38,5 @@ class ShowImage(Frame):
 
         self.ratio = height / new_height
 
-        self.canvas.config(width=new_width, height=new_height)
-        self.canvas.create_image(new_width / 2, new_height / 2, anchor=CENTER, image=self.shown_image)
+        self.canvas.config(width= self.winfo_width(), height= self.winfo_height())
+        self.canvas.create_image(self.winfo_width()/2 , self.winfo_height()/2, anchor=CENTER, image=self.shown_image)
