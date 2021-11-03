@@ -1,15 +1,14 @@
 from tkinter import Frame, Canvas, CENTER, ROUND
-from PIL import Image, ImageTk
-import cv2
+from PIL import ImageTk , ImageGrab
 
 class ShowImage(Frame):
     def __init__(self,master=None):
-
         Frame.__init__(self,master=master, width=1280 , height= 800)
         self.shown_image = None
         self.canvas = Canvas(self, width=1024, height=800)
         self.canvas.place(relx = 0.5 , rely=0.45, anchor=CENTER)
-    
+
+#SHOWING IMAGE   
     def show_image(self, img=None):
 
         if img is None:
@@ -17,8 +16,7 @@ class ShowImage(Frame):
         else:
             image = img
 
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        height, width , channels = image.shape
+        width , height = image.size
         
         ratio = height / width
 
@@ -33,10 +31,28 @@ class ShowImage(Frame):
                 new_height = 800
                 new_width = int(new_height * (width / height))
 
-        self.shown_image = cv2.resize(image, (new_width, new_height))
-        self.shown_image = ImageTk.PhotoImage(Image.fromarray(self.shown_image))
+        self.shown_image = image.resize((new_width, new_height))
+        self.shown_image = ImageTk.PhotoImage(self.shown_image)
 
-        self.ratio = height / new_height
+        self.canvas.config(width= new_width, height= new_height)
+        self.canvas.create_image(new_width/2 , new_height/2, anchor=CENTER, image=self.shown_image , bg=None)
 
-        self.canvas.config(width= self.winfo_width(), height= self.winfo_height())
-        self.canvas.create_image(self.winfo_width()/2 , self.winfo_height()/2, anchor=CENTER, image=self.shown_image)
+#DRAWING AREA   
+    def startdrawing(self):
+        self.canvas.bind("<Button-1>", self.drawcoordinates )
+        self.canvas.bind("<B1-Motion>", self.draw)
+    
+    def drawcoordinates(self,event):
+        self.x = event.x
+        self.y = event.y
+        
+    def draw(self,event):
+        self.canvas.create_line((self.x, self.y, event.x, event.y),width=2,fill="red", capstyle= ROUND, smooth=True)
+        self.x = event.x
+        self.y = event.y
+        x = self.winfo_rootx()+self.canvas.winfo_x()+2
+        y = self.winfo_rooty()+self.canvas.winfo_y()+2
+        x1 = x + self.shown_image.width()-2
+        y1 = y + self.shown_image.height()-2
+        self.master.EditedImage = ImageGrab.grab((x ,y ,x1,y1))
+

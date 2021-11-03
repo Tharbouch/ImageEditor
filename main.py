@@ -8,6 +8,8 @@ class Main(Tk):
         self.filename = ""
         self.OriginalImage = None
         self.EditedImage = None
+        self.ImageIsSelected = False
+
 
         Tk.__init__(self)
         self.title('Image Editor')

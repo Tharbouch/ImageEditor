@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
-import cv2
+from PIL import Image
 from adjust import Adjust
 from filter import Filters
 class EditingButtons(Frame):
@@ -25,7 +25,8 @@ class EditingButtons(Frame):
         self.Filters_button = Button(self , text='Filter'  ) 
         self.Clear_button   = Button(self , text='Clear'   )
 
-        self.Adjust_button.bind("<ButtonRelease>",self.EditAdjust)
+        self.Draw_button   .bind("<ButtonRelease>",self.startdraw)
+        self.Adjust_button .bind("<ButtonRelease>",self.EditAdjust)
         self.Filters_button.bind("<ButtonRelease>",self.ApplyFilters)
 
         self.Addtext_button.pack(side=LEFT)
@@ -37,35 +38,41 @@ class EditingButtons(Frame):
 
     def NewPictureImported(self):
         filename = filedialog.askopenfilename()
-        image = cv2.imread(filename)
+        image = Image.open(filename)
 
         if image is not None:
             self.master.filename = filename
             self.master.OriginalImage = image.copy()
             self.master.EditedImage = image.copy()
             self.master.viewimage.show_image()
+            self.master.ImageIsSelected = True
 
     def SavePicture(self):
+        if self.master.ImageIsSelected:
             SavedImage = self.master.EditedImage
-            image_name = self.master.filename
-            cv2.imwrite(image_name, SavedImage)
+            SavedImage.save(self.master.filename)
 
     def SavePictureAs(self):
+        if self.master.ImageIsSelected:
+            origial_width , original_height = self.master.OriginalImage.size
             original_file_type = self.master.filename.split('.')[-1]
-            filename = filedialog.asksaveasfilename()
-            filename = filename + "." + original_file_type
-
-            SavedImage = self.master.EditedImage
-            cv2.imwrite(filename, SavedImage)
+            filename = filedialog.asksaveasfilename(defaultextension=original_file_type ,filetypes=[("JPG (*.jpg)","*.jpg"),("PNG (*.png)","*.png"),("JPEG (*jpeg)","*jpeg")])
+            SavedImage = self.master.EditedImage.resize((origial_width , original_height))
+            SavedImage.save(filename)
             self.master.filename = filename
 
     def EditAdjust(self,event):
+        if self.master.ImageIsSelected:
             if self.winfo_containing(event.x_root, event.y_root) == self.Adjust_button:
                 self.master.adjust_frame = Adjust(master=self.master)
-                self.master.adjust_frame.grab_set()  
+                self.master.adjust_frame.grab_set() 
 
     def ApplyFilters(self,event):
+        if self.master.ImageIsSelected:
             if self.winfo_containing(event.x_root, event.y_root) == self.Filters_button:
                 self.master.filters_frame = Filters(master=self.master)
                 self.master.filters_frame.grab_set()  
-        
+    def startdraw(self,event):
+        if self.master.ImageIsSelected:
+            if self.winfo_containing(event.x_root, event.y_root) == self.Draw_button:
+                self.master.viewimage.startdrawing()
