@@ -68,21 +68,21 @@ class EditingButtons(Frame):
         if self.winfo_containing(event.x_root, event.y_root) == self.RotateButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
-                    self.master.viewimage.deactivate_draw()
+                    self.master.viewimage.DeactivateDraw()
                 self.master.rotate_frame = Rotate(master=self.master)
     def startdraw(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.DrawButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
-                    self.master.viewimage.deactivate_draw()
+                    self.master.viewimage.DeactivateDraw()
                 else:
-                    self.master.viewimage.startdrawing()
+                    self.master.viewimage.StartDrawing()
 
     def EditAdjust(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.AdjustButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
-                    self.master.viewimage.deactivate_draw()
+                    self.master.viewimage.DeactivateDraw()
                 self.master.adjust_frame = Adjust(master=self.master)
                 self.master.adjust_frame.grab_set() 
 
@@ -90,7 +90,7 @@ class EditingButtons(Frame):
         if self.winfo_containing(event.x_root, event.y_root) == self.FiltersButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
-                    self.master.viewimage.deactivate_draw()
+                    self.master.viewimage.DeactivateDraw()
                 self.master.filters_frame = Filters(master=self.master)
                 self.master.filters_frame.grab_set()  
 
@@ -98,6 +98,6 @@ class EditingButtons(Frame):
         if self.winfo_containing(event.x_root, event.y_root) == self.ClearButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
-                    self.master.viewimage.deactivate_draw()
+                    self.master.viewimage.DeactivateDraw()
                 self.master.EditedImage = self.master.OriginalImage.copy()
                 self.master.viewimage.show_image()

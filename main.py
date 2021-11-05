@@ -17,6 +17,7 @@ class Main(Tk):
         self.title('Image Editor')
         self.iconphoto(True,PhotoImage(file="icon.png"))
         self.geometry(f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}')
+        self.config(background='#5a4040')
         self.buttons = EditingButtons(master=self)
         self.buttons.pack(pady=25)
         
