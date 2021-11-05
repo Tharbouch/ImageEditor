@@ -1,8 +1,11 @@
 from tkinter import Frame, Canvas, CENTER, ROUND
-from PIL import ImageTk , ImageGrab
-
+from PIL import ImageTk , ImageGrab , Image
+import cv2
 class ShowImage(Frame):
     def __init__(self,master=None):
+
+        self.LinkDraw = list()
+
         Frame.__init__(self,master=master, width=1280 , height= 800)
         self.shown_image = None
         self.canvas = Canvas(self, width=1024, height=800)
@@ -10,6 +13,8 @@ class ShowImage(Frame):
 
 #SHOWING IMAGE   
     def show_image(self, img=None):
+
+        self.ClearCanvas()
 
         if img is None:
             image = self.master.EditedImage.copy()
@@ -39,20 +44,33 @@ class ShowImage(Frame):
 
 #DRAWING AREA   
     def startdrawing(self):
-        self.canvas.bind("<Button-1>", self.drawcoordinates )
+        self.canvas.bind("<ButtonPress>", self.start_draw)
         self.canvas.bind("<B1-Motion>", self.draw)
-    
-    def drawcoordinates(self,event):
-        self.x = event.x
-        self.y = event.y
-        
-    def draw(self,event):
-        self.canvas.create_line((self.x, self.y, event.x, event.y),width=2,fill="red", capstyle= ROUND, smooth=True)
-        self.x = event.x
-        self.y = event.y
+        self.master.drawstatus = True
+
+    def deactivate_draw(self):
+
+        self.canvas.unbind("<ButtonPress>")
+        self.canvas.unbind("<B1-Motion>")
+        self.master.drawstatus = False
+
         x = self.winfo_rootx()+self.canvas.winfo_x()+2
         y = self.winfo_rooty()+self.canvas.winfo_y()+2
         x1 = x + self.shown_image.width()-2
         y1 = y + self.shown_image.height()-2
         self.master.EditedImage = ImageGrab.grab((x ,y ,x1,y1))
 
+
+    def start_draw(self, event):
+        self.x = event.x
+        self.y = event.y
+
+    def draw(self, event):
+
+        self.LinkDraw.append(self.canvas.create_line((self.x, self.y, event.x, event.y), width=2, fill="red", capstyle=ROUND, smooth=True))
+    
+        self.x = event.x
+        self.y = event.y
+        
+    def ClearCanvas(self):
+        self.canvas.delete("all")

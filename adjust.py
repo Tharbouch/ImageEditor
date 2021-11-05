@@ -28,9 +28,21 @@ class Adjust(Toplevel):
 
         self.PreviewButtton = Button(self, text="Preview")
         self.PreviewButtton.bind("<ButtonRelease>", self.preview)
-        self.PreviewButtton.pack()
-        
-    def preview(self, event):
+        self.PreviewButtton.pack(side=BOTTOM)
+
+        self.apply_button = Button(self, text="Apply")
+        self.apply_button.bind("<ButtonRelease>", self.apply)
+        self.apply_button.pack(side= LEFT)
+
+        self.apply_button = Button(self, text="Cancel")
+        self.apply_button.bind("<ButtonRelease>", self.close)
+        self.apply_button.pack(side= RIGHT)
+    
+    def apply(self,event):
+        self.master.EditedImage = self.ProcessingImage
+        self.close()
+
+    def preview(self,event):
         BrightnessEnhancer   = ImageEnhance.Brightness(self.OriginalImage)
         brightness = BrightnessEnhancer.enhance(self.BrightnessScale.get())
         ContrastEnhancer     = ImageEnhance.Contrast(brightness)
@@ -39,3 +51,7 @@ class Adjust(Toplevel):
         sharpness = SharpnessEnhancer.enhance(self.SharpnessScale.get())
         self.ProcessingImage = sharpness
         self.master.viewimage.show_image(img=self.ProcessingImage)
+
+    def close(self):
+        self.master.viewimage.show_image()
+        self.destroy()

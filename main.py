@@ -9,6 +9,8 @@ class Main(Tk):
         self.OriginalImage = None
         self.EditedImage = None
         self.ImageIsSelected = False
+        self.drawstatus = False
+        self.cropstatus = False
 
 
         Tk.__init__(self)
