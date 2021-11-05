@@ -5,7 +5,7 @@ class Adjust(Toplevel):
         Toplevel.__init__(self,master=master)
 
         self.OriginalImage   = self.master.EditedImage
-        self.ProcessingImage = self.master.EditedImage
+        self.ProcessingImage = None
 
         self.BrightnessLable = Label(self, text="Brightness")
         self.BrightnessLable.pack()
@@ -52,6 +52,6 @@ class Adjust(Toplevel):
         self.ProcessingImage = sharpness
         self.master.viewimage.show_image(img=self.ProcessingImage)
 
-    def close(self):
+    def close(self,event):
         self.master.viewimage.show_image()
         self.destroy()

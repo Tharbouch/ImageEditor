@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import filedialog
 from PIL import Image
 from adjust import Adjust
-from filter import Filters
+from filters import Filters
+from rotate import Rotate
 class EditingButtons(Frame):
 
     def __init__(self,master=None):
@@ -25,6 +26,7 @@ class EditingButtons(Frame):
         self.FiltersButton = Button(self , text='Filter'  ) 
         self.ClearButton   = Button(self , text='Clear'   )
 
+        self.RotateButton .bind("<ButtonRelease>",self.rotate)
         self.DrawButton   .bind("<ButtonRelease>",self.startdraw)
         self.AdjustButton .bind("<ButtonRelease>",self.EditAdjust)
         self.FiltersButton.bind("<ButtonRelease>",self.ApplyFilters)
@@ -62,6 +64,20 @@ class EditingButtons(Frame):
             SavedImage.save(filename)
             self.master.filename = filename
 
+    def rotate(self,event):
+        if self.winfo_containing(event.x_root, event.y_root) == self.RotateButton:
+            if self.master.ImageIsSelected:
+                if self.master.drawstatus:
+                    self.master.viewimage.deactivate_draw()
+                self.master.rotate_frame = Rotate(master=self.master)
+    def startdraw(self,event):
+        if self.winfo_containing(event.x_root, event.y_root) == self.DrawButton:
+            if self.master.ImageIsSelected:
+                if self.master.drawstatus:
+                    self.master.viewimage.deactivate_draw()
+                else:
+                    self.master.viewimage.startdrawing()
+
     def EditAdjust(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.AdjustButton:
             if self.master.ImageIsSelected:
@@ -77,14 +93,6 @@ class EditingButtons(Frame):
                     self.master.viewimage.deactivate_draw()
                 self.master.filters_frame = Filters(master=self.master)
                 self.master.filters_frame.grab_set()  
-
-    def startdraw(self,event):
-        if self.winfo_containing(event.x_root, event.y_root) == self.DrawButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.deactivate_draw()
-                else:
-                    self.master.viewimage.startdrawing()
 
     def clear(self, event):
         if self.winfo_containing(event.x_root, event.y_root) == self.ClearButton:

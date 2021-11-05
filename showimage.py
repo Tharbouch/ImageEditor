@@ -1,6 +1,5 @@
 from tkinter import Frame, Canvas, CENTER, ROUND
-from PIL import ImageTk , ImageGrab , Image
-import cv2
+from PIL import ImageTk , ImageGrab
 class ShowImage(Frame):
     def __init__(self,master=None):
 
