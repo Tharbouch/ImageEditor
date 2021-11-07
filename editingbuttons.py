@@ -29,7 +29,7 @@ class EditingButtons(Frame):
 
         self.RotateButton .bind("<ButtonRelease-1>",self.Rotate)
         self.DrawButton   .bind("<ButtonRelease-1>",self.StartDraw)
-        self.CropButton   .bind("<ButtonRelease-1>",self.StartCropingp)
+        self.CropButton   .bind("<ButtonRelease-1>",self.StartCroping)
         self.AdjustButton .bind("<ButtonRelease-1>",self.EditAdjust)
         self.FiltersButton.bind("<ButtonRelease-1>",self.ApplyFilters)
         self.ClearButton  .bind("<ButtonRelease-1>",self.Clear)
