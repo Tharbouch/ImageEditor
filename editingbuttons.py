@@ -73,24 +73,36 @@ class EditingButtons(Frame):
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.rotate_frame = Rotate(master=self.master)
     def StartDraw(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.DrawButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
                 else:
                     self.master.viewimage.StartDrawing()
     def StartCroping(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.CropButton:
             if self.master.ImageIsSelected:
-                self.master.viewimage.StarCrop()
+                if self.master.drawstatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
+                else:
+                    self.master.viewimage.StarCrop()
+
 
     def EditAdjust(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.AdjustButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.adjust_frame = Adjust(master=self.master)
                 self.master.adjust_frame.grab_set() 
 
@@ -99,6 +111,8 @@ class EditingButtons(Frame):
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.filters_frame = Filters(master=self.master)
                 self.master.filters_frame.grab_set()  
 
@@ -107,6 +121,8 @@ class EditingButtons(Frame):
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.EditedImage = self.master.OriginalImage.copy()
                 self.master.viewimage.ClearCanvas()
     def Undo(self,event):
@@ -114,5 +130,7 @@ class EditingButtons(Frame):
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
+                if self.master.cropstatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.EditedImage =  self.master.BackUpImage
                 self.master.viewimage.ClearCanvas()
