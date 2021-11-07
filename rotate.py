@@ -10,29 +10,31 @@ class Rotate(Toplevel):
         self.FlipHorizontale  = Button(self ,text='Flip Horizontale')
         self.FlipVirtecal     = Button(self ,text='Flip Vertical')
 
-        self.Rotate90       .bind("<ButtonPress>", self.rotate90)
-        self.Rotate180      .bind("<ButtonPress>", self.rotate180)
-        self.FlipHorizontale.bind("<ButtonPress>", self.filphorizontale)
-        self.FlipVirtecal   .bind("<ButtonPress>", self.flipvertical)
+        self.Rotate90       .bind("<ButtonPress-1>", self.rotate90)
+        self.Rotate180      .bind("<ButtonPress-1>", self.rotate180)
+        self.FlipHorizontale.bind("<ButtonPress-1>", self.filphorizontale)
+        self.FlipVirtecal   .bind("<ButtonPress-1>", self.flipvertical)
 
         self.Rotate90       .pack()
         self.Rotate180      .pack()
         self.FlipHorizontale.pack()
-        self.FlipVirtecal   .pack()        
+        self.FlipVirtecal   .pack()   
+
+        self.master.BackUpImage = self.master.EditedImage      
 
     def rotate90(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.ROTATE_90)
         self.master.EditedImage = self.RotateImage
-        self.master.viewimage.show_image(img=self.RotateImage)
+        self.master.viewimage.ShowImage(img=self.RotateImage)
     def rotate180(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.ROTATE_180)
-        self.master.viewimage.show_image(img=self.RotateImage)
+        self.master.viewimage.ShowImage(img=self.RotateImage)
         self.master.EditedImage = self.RotateImage
     def filphorizontale(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.FLIP_LEFT_RIGHT)
-        self.master.viewimage.show_image(img=self.RotateImage)
+        self.master.viewimage.ShowImage(img=self.RotateImage)
         self.master.EditedImage = self.RotateImage
     def flipvertical(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.FLIP_TOP_BOTTOM)
-        self.master.viewimage.show_image(img=self.RotateImage)
+        self.master.viewimage.ShowImage(img=self.RotateImage)
         self.master.EditedImage = self.RotateImage

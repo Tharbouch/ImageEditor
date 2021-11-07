@@ -9,68 +9,69 @@ class Filters(Toplevel):
         self.FiltredImageCV = None
         self.FiltredImagePIL = None
 
-        self.negative_button = Button(master=self, text="Negative")
-        self.black_white_button = Button(master=self, text="Black White")
-        self.sepia_button = Button(master=self, text="Sepia")
-        self.emboss_button = Button(master=self, text="Emboss")
+        self.negative_button      = Button(master=self, text="Negative")
+        self.black_white_button   = Button(master=self, text="Black White")
+        self.sepia_button         = Button(master=self, text="Sepia")
+        self.emboss_button        = Button(master=self, text="Emboss")
         self.gaussian_blur_button = Button(master=self, text="Gaussian Blur")
-        self.median_blur_button = Button(master=self, text="Median Blur")
-        self.cancel_button = Button(master=self, text="Cancel")
-        self.apply_button = Button(master=self, text="Apply")
+        self.median_blur_button   = Button(master=self, text="Median Blur")
+        self.cancel_button        = Button(master=self, text="Cancel")
+        self.apply_button         = Button(master=self, text="Apply")
 
-        self.negative_button.bind("<ButtonRelease>", self.negative_button_released)
-        self.black_white_button.bind("<ButtonRelease>", self.black_white_released)
-        self.sepia_button.bind("<ButtonRelease>", self.sepia_button_released)
-        self.emboss_button.bind("<ButtonRelease>", self.emboss_button_released)
-        self.gaussian_blur_button.bind("<ButtonRelease>", self.gaussian_blur_button_released)
-        self.median_blur_button.bind("<ButtonRelease>", self.median_blur_button_released)
-        self.apply_button.bind("<ButtonRelease>", self.apply_button_released)
-        self.cancel_button.bind("<ButtonRelease>", self.cancel_button_released)
+        self.negative_button      .bind("<ButtonRelease-1>", self.negative_button_released)
+        self.black_white_button   .bind("<ButtonRelease-1>", self.black_white_released)
+        self.sepia_button         .bind("<ButtonRelease-1>", self.sepia_button_released)
+        self.emboss_button        .bind("<ButtonRelease-1>", self.emboss_button_released)
+        self.gaussian_blur_button .bind("<ButtonRelease-1>", self.gaussian_blur_button_released)
+        self.median_blur_button   .bind("<ButtonRelease-1>", self.median_blur_button_released)
+        self.apply_button         .bind("<ButtonRelease-1>", self.apply_button_released)
+        self.cancel_button        .bind("<ButtonRelease-1>", self.cancel_button_released)
 
-        self.negative_button.pack()
-        self.black_white_button.pack()
-        self.sepia_button.pack()
-        self.emboss_button.pack()
-        self.gaussian_blur_button.pack()
-        self.median_blur_button.pack()
-        self.cancel_button.pack(side=RIGHT)
-        self.apply_button.pack()
+        self.negative_button      .pack()
+        self.black_white_button   .pack()
+        self.sepia_button         .pack()
+        self.emboss_button        .pack()
+        self.gaussian_blur_button .pack()
+        self.median_blur_button   .pack()
+        self.cancel_button        .pack(side=RIGHT)
+        self.apply_button         .pack()
 
     def negative_button_released(self, event):
         self.negative()
-        self.show_image()
+        self.ShowImage()
 
     def black_white_released(self, event):
         self.black_white()
-        self.show_image()
+        self.ShowImage()
 
     def sepia_button_released(self, event):
         self.sepia()
-        self.show_image()
+        self.ShowImage()
 
     def emboss_button_released(self, event):
         self.emboss()
-        self.show_image()
+        self.ShowImage()
 
     def gaussian_blur_button_released(self, event):
         self.gaussian_blur()
-        self.show_image()
+        self.ShowImage()
 
     def median_blur_button_released(self, event):
         self.gaussian_blur()
-        self.show_image()
+        self.ShowImage()
 
     def apply_button_released(self, event):
+        self.master.BackUpImage = self.master.EditedImage 
         self.master.EditedImage = self.FiltredImagePIL
-        self.show_image()
+        self.ShowImage()
         self.close()
 
     def cancel_button_released(self, event):
-        self.master.viewimage.show_image()
+        self.master.viewimage.ShowImage()
         self.close()
 
-    def show_image(self):
-        self.master.viewimage.show_image(img=self.FiltredImagePIL)
+    def ShowImage(self):
+        self.master.viewimage.ShowImage(img=self.FiltredImagePIL)
 
     def negative(self):
         self.FiltredImageCV = cv2.bitwise_not(self.image)

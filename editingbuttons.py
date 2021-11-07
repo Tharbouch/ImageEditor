@@ -7,7 +7,7 @@ from rotate import Rotate
 class EditingButtons(Frame):
 
     def __init__(self,master=None):
-        Frame.__init__(self,master=master)
+        Frame.__init__(self,master=master , bg='#5a4040')
         
         menu = Menu(self.master)
         self.master.config(menu=menu)
@@ -25,13 +25,17 @@ class EditingButtons(Frame):
         self.AdjustButton  = Button(self , text='Adjust'  )
         self.FiltersButton = Button(self , text='Filter'  ) 
         self.ClearButton   = Button(self , text='Clear'   )
+        self.UndoButton    = Button(self,  text='Undo'    )
 
-        self.RotateButton .bind("<ButtonRelease>",self.rotate)
-        self.DrawButton   .bind("<ButtonRelease>",self.startdraw)
-        self.AdjustButton .bind("<ButtonRelease>",self.EditAdjust)
-        self.FiltersButton.bind("<ButtonRelease>",self.ApplyFilters)
-        self.ClearButton  .bind("<ButtonRelease>",self.clear)
+        self.RotateButton .bind("<ButtonRelease-1>",self.Rotate)
+        self.DrawButton   .bind("<ButtonRelease-1>",self.StartDraw)
+        self.CropButton   .bind("<ButtonRelease-1>",self.StartCropingp)
+        self.AdjustButton .bind("<ButtonRelease-1>",self.EditAdjust)
+        self.FiltersButton.bind("<ButtonRelease-1>",self.ApplyFilters)
+        self.ClearButton  .bind("<ButtonRelease-1>",self.Clear)
+        self.UndoButton   .bind("<ButtonRelease-1>",self.Undo)
 
+        self.UndoButton   .pack(side=BOTTOM)
         self.RotateButton .pack(side=LEFT)
         self.DrawButton   .pack(side=LEFT)
         self.CropButton   .pack(side=LEFT)
@@ -47,7 +51,7 @@ class EditingButtons(Frame):
             self.master.filename = filename
             self.master.OriginalImage = image.copy()
             self.master.EditedImage = image.copy()
-            self.master.viewimage.show_image()
+            self.master.viewimage.ShowImage()
             self.master.ImageIsSelected = True
 
     def SavePicture(self):
@@ -64,19 +68,23 @@ class EditingButtons(Frame):
             SavedImage.save(filename)
             self.master.filename = filename
 
-    def rotate(self,event):
+    def Rotate(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.RotateButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
                 self.master.rotate_frame = Rotate(master=self.master)
-    def startdraw(self,event):
+    def StartDraw(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.DrawButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
                 else:
                     self.master.viewimage.StartDrawing()
+    def StartCroping(self,event):
+        if self.winfo_containing(event.x_root, event.y_root) == self.CropButton:
+            if self.master.ImageIsSelected:
+                self.master.viewimage.StarCrop()
 
     def EditAdjust(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.AdjustButton:
@@ -94,10 +102,17 @@ class EditingButtons(Frame):
                 self.master.filters_frame = Filters(master=self.master)
                 self.master.filters_frame.grab_set()  
 
-    def clear(self, event):
+    def Clear(self, event):
         if self.winfo_containing(event.x_root, event.y_root) == self.ClearButton:
             if self.master.ImageIsSelected:
                 if self.master.drawstatus:
                     self.master.viewimage.DeactivateDraw()
                 self.master.EditedImage = self.master.OriginalImage.copy()
-                self.master.viewimage.show_image()
+                self.master.viewimage.ClearCanvas()
+    def Undo(self,event):
+        if self.winfo_containing(event.x_root , event.y_root) == self.UndoButton:
+            if self.master.ImageIsSelected:
+                if self.master.drawstatus:
+                    self.master.viewimage.DeactivateDraw()
+                self.master.EditedImage =  self.master.BackUpImage
+                self.master.viewimage.ClearCanvas()

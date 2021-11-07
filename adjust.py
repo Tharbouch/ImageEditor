@@ -25,33 +25,45 @@ class Adjust(Toplevel):
         self.SharpnessScale.set(1)
         self.SharpnessScale.pack()
 
+        self.ColorLable     = Label (self , text="Color")
+        self.ColorLable     .pack()
+        self.ColorScale     = Scale(self, from_=0, to_= 5, length=250, resolution=0.1,orient=HORIZONTAL)
+        self.ColorScale     .set(1)
+        self.ColorScale     .pack() 
 
         self.PreviewButtton = Button(self, text="Preview")
-        self.PreviewButtton.bind("<ButtonRelease>", self.preview)
+        self.PreviewButtton.bind("<ButtonRelease-1>", self.preview)
         self.PreviewButtton.pack(side=BOTTOM)
 
-        self.apply_button = Button(self, text="Apply")
-        self.apply_button.bind("<ButtonRelease>", self.apply)
-        self.apply_button.pack(side= LEFT)
+        self.ApllyButton = Button(self, text="Apply")
+        self.ApllyButton .bind("<ButtonRelease>", self.apply)
+        self.ApllyButton .pack(side= LEFT)
 
-        self.apply_button = Button(self, text="Cancel")
-        self.apply_button.bind("<ButtonRelease>", self.close)
-        self.apply_button.pack(side= RIGHT)
+        self.CloseButton = Button(self, text="Cancel")
+        self.CloseButton .bind("<ButtonRelease>", self.close)
+        self.CloseButton .pack(side= RIGHT)
     
     def apply(self,event):
+        self.master.BackUpImage = self.master.EditedImage 
         self.master.EditedImage = self.ProcessingImage
-        self.close()
+        
 
     def preview(self,event):
         BrightnessEnhancer   = ImageEnhance.Brightness(self.OriginalImage)
         brightness = BrightnessEnhancer.enhance(self.BrightnessScale.get())
+
         ContrastEnhancer     = ImageEnhance.Contrast(brightness)
         contrast = ContrastEnhancer.enhance(self.ContrastScale.get())
+
         SharpnessEnhancer    = ImageEnhance.Sharpness(contrast)
         sharpness = SharpnessEnhancer.enhance(self.SharpnessScale.get())
-        self.ProcessingImage = sharpness
-        self.master.viewimage.show_image(img=self.ProcessingImage)
+
+        ColorEnhancer = ImageEnhance.Color(sharpness)
+        colorbalance = ColorEnhancer.enhance(self.ColorScale.get())
+
+        self.ProcessingImage = colorbalance
+        self.master.viewimage.ShowImage(img=self.ProcessingImage)
 
     def close(self,event):
-        self.master.viewimage.show_image()
+        self.master.viewimage.ShowImage()
         self.destroy()

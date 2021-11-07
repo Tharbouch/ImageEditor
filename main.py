@@ -8,6 +8,7 @@ class Main(Tk):
         self.filename = ""
         self.OriginalImage = None
         self.EditedImage = None
+        self.BackUpImage = None
         self.ImageIsSelected = False
         self.drawstatus = False
         self.cropstatus = False
