@@ -61,10 +61,10 @@ class EditingButtons(Frame):
 
     def SavePictureAs(self):
         if self.master.ImageIsSelected:
-            origial_width , original_height = self.master.OriginalImage.size
-            original_file_type = self.master.filename.split('.')[-1]
-            SavedImage = self.master.EditedImage.resize((origial_width , original_height))
-            filename = filedialog.asksaveasfilename(defaultextension=original_file_type ,filetypes=[("JPG (*.jpg)","*.jpg"),("PNG (*.png)","*.png"),("JPEG (*jpeg)","*jpeg")])
+            OrigialWidth , OriginalHeight = self.master.OriginalImage.size
+            OriginalImageTyppe = self.master.OrginalImage.format
+            SavedImage = self.master.EditedImage.resize((OrigialWidth , OriginalHeight))
+            filename = filedialog.asksaveasfilename(defaultextension=OriginalImageTyppe ,filetypes=[("JPG (*.jpg)","*.jpg"),("PNG (*.png)","*.png"),("JPEG (*jpeg)","*jpeg")])
             SavedImage.save(filename)
             self.master.filename = filename
 
