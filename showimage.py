@@ -53,7 +53,7 @@ class ShowImage(Frame):
         self.canvas.bind("<B1-Motion>", self.Draw)
         self.master.drawstatus = True
 
-    def DeactivateDraw(self):
+    def DesactivateDraw(self):
 
         self.canvas.unbind("<ButtonPress>")
         self.canvas.unbind("<B1-Motion>")
@@ -79,13 +79,13 @@ class ShowImage(Frame):
     def StarCrop(self):
         self.master.BackUpImage = self.master.EditedImage 
         
-        self.canvas.bind("<ButtonPress>",self.CropCordinates)
+        self.canvas.bind("<ButtonPress-1>",self.CropCordinates)
         self.canvas.bind("<B1-Motion>",self.crop)
         self.canvas.bind("<ButtonRelease>",self.EndCrop)
         self.master.cropstatus = True
     
-    def DeactivateCrop(self):
-        self.canvas.unbind("<ButtonPress>")
+    def DesactivateCrop(self):
+        self.canvas.unbind("<ButtonPress-1>")
         self.canvas.unbind("<B1-Motion>")
         self.canvas.unbind("<ButtonRelease>")
         self.master.cropstatus = False
