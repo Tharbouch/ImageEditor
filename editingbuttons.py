@@ -53,7 +53,7 @@ class EditingButtons(Frame):
         
     def NewPictureImported(self):
         filename = filedialog.askopenfilename( initialdir=path.join('C:\\','Users',getlogin(),'Desktop\\'),
-                                               filetypes=[("All Pictures Formats",("*.png","*.jpeg","*.jpg","*.jpe","*.ico","*.cr2","*.webp","*.bmp")), ("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("CR2","*.cr2"),("TIFF",("*.tiff",".*tif"))])
+                                               filetypes=[("All Pictures Formats",("*.png","*.jpeg","*.jpg","*.jpe","*.ico","*.cr2","*.webp","*.bmp")), ("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))])
         image = Image.open(filename)
 
         if image is not None:

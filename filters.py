@@ -79,7 +79,7 @@ class Filters(Toplevel):
     def sepia(self):
         kernel = np.array([[0.193, 0.369, 0.189],
                             [0.249, 0.286, 0.168],
-                            [0.172, 0.534, 0.131]])
+                            [0.172, 0.334, 0.131]])
 
         self.FiltredImageCV = cv2.filter2D(self.image, -1, kernel)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
