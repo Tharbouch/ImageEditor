@@ -5,14 +5,13 @@ import numpy as np
 class Filters(Toplevel):
     def __init__(self,master=None):
         Toplevel.__init__(self,master=master)
-        self.image = np.array(self.master.EditedImage)
+        self.image = np.asarray(self.master.EditedImage)
         self.FiltredImageCV = None
         self.FiltredImagePIL = None
 
         self.negative_button      = Button(master=self, text="Negative")
         self.black_white_button   = Button(master=self, text="Black White")
         self.sepia_button         = Button(master=self, text="Sepia")
-        self.emboss_button        = Button(master=self, text="Emboss")
         self.gaussian_blur_button = Button(master=self, text="Gaussian Blur")
         self.median_blur_button   = Button(master=self, text="Median Blur")
         self.cancel_button        = Button(master=self, text="Cancel")
@@ -21,7 +20,6 @@ class Filters(Toplevel):
         self.negative_button      .bind("<ButtonRelease-1>", self.negative_button_released)
         self.black_white_button   .bind("<ButtonRelease-1>", self.black_white_released)
         self.sepia_button         .bind("<ButtonRelease-1>", self.sepia_button_released)
-        self.emboss_button        .bind("<ButtonRelease-1>", self.emboss_button_released)
         self.gaussian_blur_button .bind("<ButtonRelease-1>", self.gaussian_blur_button_released)
         self.median_blur_button   .bind("<ButtonRelease-1>", self.median_blur_button_released)
         self.apply_button         .bind("<ButtonRelease-1>", self.apply_button_released)
@@ -30,7 +28,6 @@ class Filters(Toplevel):
         self.negative_button      .pack()
         self.black_white_button   .pack()
         self.sepia_button         .pack()
-        self.emboss_button        .pack()
         self.gaussian_blur_button .pack()
         self.median_blur_button   .pack()
         self.cancel_button        .pack(side=RIGHT)
@@ -46,10 +43,6 @@ class Filters(Toplevel):
 
     def sepia_button_released(self, event):
         self.sepia()
-        self.ShowImage()
-
-    def emboss_button_released(self, event):
-        self.emboss()
         self.ShowImage()
 
     def gaussian_blur_button_released(self, event):
@@ -78,25 +71,19 @@ class Filters(Toplevel):
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
 
     def black_white(self):
-        self.FiltredImageCV = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
+        self.FiltredImageCV  = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+        self.FiltredImageCV  = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
 
 
     def sepia(self):
-        kernel = np.array([[0.272, 0.534, 0.131],
-                           [0.349, 0.686, 0.168],
-                           [0.393, 0.769, 0.189]])
+        kernel = np.array([[0.193, 0.369, 0.189],
+                            [0.249, 0.286, 0.168],
+                            [0.172, 0.534, 0.131]])
 
         self.FiltredImageCV = cv2.filter2D(self.image, -1, kernel)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
 
-    def emboss(self):
-        kernel = np.array([[0, -1, -1],
-                           [1, 0, -1],
-                           [1, 1, 0]])
-
-        self.FiltredImageCV = cv2.filter2D(self.image, -1, kernel)
-        self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
 
     def gaussian_blur(self):
         self.FiltredImageCV = cv2.GaussianBlur(self.image, (41, 41), 0)

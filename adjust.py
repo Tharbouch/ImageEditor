@@ -1,5 +1,7 @@
 from tkinter import *
-from PIL import ImageEnhance
+from PIL import ImageEnhance,Image
+import numpy as np
+import cv2
 class Adjust(Toplevel):
     def __init__(self,master=None):
         Toplevel.__init__(self,master=master)
@@ -25,16 +27,22 @@ class Adjust(Toplevel):
         self.SharpnessScale.set(1)
         self.SharpnessScale.pack()
 
-        self.ColorLable     = Label (self , text="Color")
-        self.ColorLable     .pack()
-        self.ColorScale     = Scale(self, from_=0, to_= 5, length=250, resolution=0.1,orient=HORIZONTAL)
-        self.ColorScale     .set(1)
-        self.ColorScale     .pack() 
+        self.GammaLabel = Label(self, text="Gamma")
+        self.GammaLabel.pack()
+        self.GammaScale = Scale(self, from_=0 ,to_=5 , length=250 ,resolution=0.1 , orient=HORIZONTAL)
+        self.GammaScale.set(1)
+        self.GammaScale.pack()
 
+        self.ColorLable = Label (self , text="Color")
+        self.ColorLable .pack()
+        self.ColorScale = Scale(self, from_=0, to_= 5, length=250, resolution=0.1,orient=HORIZONTAL)
+        self.ColorScale .set(1)
+        self.ColorScale .pack() 
+        
         self.PreviewButtton = Button(self, text="Preview")
-        self.PreviewButtton.bind("<ButtonRelease-1>", self.preview)
-        self.PreviewButtton.pack(side=BOTTOM)
-
+        self.PreviewButtton .bind("<ButtonRelease>", self.preview)
+        self.PreviewButtton .pack(side=BOTTOM)
+          
         self.ApllyButton = Button(self, text="Apply")
         self.ApllyButton .bind("<ButtonRelease>", self.apply)
         self.ApllyButton .pack(side= LEFT)
@@ -46,7 +54,6 @@ class Adjust(Toplevel):
     def apply(self,event):
         self.master.BackUpImage = self.master.EditedImage 
         self.master.EditedImage = self.ProcessingImage
-        
 
     def preview(self,event):
         BrightnessEnhancer   = ImageEnhance.Brightness(self.OriginalImage)
@@ -61,8 +68,18 @@ class Adjust(Toplevel):
         ColorEnhancer = ImageEnhance.Color(sharpness)
         colorbalance = ColorEnhancer.enhance(self.ColorScale.get())
 
-        self.ProcessingImage = colorbalance
+        GammaCvImage = np.array(colorbalance)
+        gamma = self.GammaScale.get()
+        invGamma = 1 / gamma
+        table = [((i / 255) ** invGamma) * 255 for i in range(256)]
+        table = np.array(table, np.uint8)
+        GammaCvImage = cv2.LUT(GammaCvImage, table)
+        GammaPillowImage = Image.fromarray(GammaCvImage)
+
+        self.ProcessingImage = GammaPillowImage
         self.master.viewimage.ShowImage(img=self.ProcessingImage)
+        self.AdjustEdited = True
+
 
     def close(self,event):
         self.master.viewimage.ShowImage()
