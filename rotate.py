@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 class Rotate(Toplevel):
     def __init__(self,master=None):
-        Toplevel.__init__(self,master=master,bg='#8899BB')
+        Toplevel.__init__(self,master=master)
 
         self.RotateImage      = None
         self.rotateLEFT90     = Button(self ,text='Rotate LEFT 90°')
@@ -49,5 +49,3 @@ class Rotate(Toplevel):
         self.RotateImage = self.master.EditedImage.transpose(Image.FLIP_TOP_BOTTOM)
         self.master.viewimage.ShowImage(img=self.RotateImage)
         self.master.EditedImage = self.RotateImage
-
-

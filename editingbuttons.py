@@ -50,20 +50,23 @@ class EditingButtons(Frame):
 
         self.ChangesSaved = False
         self.master.protocol("WM_DELETE_WINDOW", self.BeforeClosing)
+
+        self.FilesTypesImport = [("All Picture file",("*.bmp","*.png","*.jpeg","*.jpg","*.jpe","*.ico","*.tiff",".*tif","*.webp")) ,("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))]
+        self.FilesTypesSave   = [("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))]
+
         
     def NewPictureImported(self):
-        filename = filedialog.askopenfilename( initialdir=path.join('C:\\','Users',getlogin(),'Desktop\\'),
-                                               filetypes=[("All Pictures Formats",("*.png","*.jpeg","*.jpg","*.jpe","*.ico","*.cr2","*.webp","*.bmp")), ("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))])
+        filename = filedialog.askopenfilename( initialdir=path.join('C:\\','Users',getlogin(),'Desktop\\'),filetypes=self.FilesTypesImport)
         image = Image.open(filename)
 
         if image is not None:
             self.master.filename = filename
             self.master.OriginalImage = image.copy()
             self.master.EditedImage = image.copy()
+            self.type = image.format
             self.master.viewimage.ShowImage()
-            self.master.ImageType= image.format
             self.master.ImageIsSelected = True
-
+    
     def SavePicture(self):
         if self.master.ImageIsSelected:
             SavedImage = self.master.EditedImage
@@ -76,12 +79,22 @@ class EditingButtons(Frame):
 
     def SavePictureAs(self):
         if self.master.ImageIsSelected:
-            OrigialWidth , OriginalHeight = self.master.OriginalImage.size
-            SavedImage = self.master.EditedImage.resize((OrigialWidth , OriginalHeight))
-            filename = filedialog.asksaveasfilename(defaultextension=self.master.ImageTypee ,filetypes=[("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))])
-            SavedImage.save(filename, quality=100, optimize=True)
-            self.master.filename = filename
-            self.ChangesSaved = True
+            try:
+                for i in range(len(self.FilesTypesSave)-1):
+                    if (self.FilesTypesSave[i][0].find(self.type)) != -1:
+                        Type = self.FilesTypesSave[i]
+                        self.FilesTypesSave.pop(i)
+                    else:
+                        pass
+                self.FilesTypesSave.insert(0,Type)
+                Type = None
+                filename = filedialog.asksaveasfilename(filetypes= self.FilesTypesSave,initialdir= path.join('C:\\','Users',getlogin(),'Desktop\\') )
+                self.master.EditedImage.save(filename, quality=100, optimize=True)
+                self.master.filename = filename
+                self.ChangesSaved = True
+
+            except ValueError as e:
+                pass
         else:
             messagebox.showinfo(title='Image Editor', message='Please import a picrure first.')
             self.NewPictureImported()

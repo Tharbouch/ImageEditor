@@ -6,7 +6,6 @@ class Main(Tk):
     def __init__(self):
         
         self.filename = ""
-        self.ImageType = None
         self.OriginalImage = None
         self.EditedImage = None
         self.BackUpImage = None

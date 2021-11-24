@@ -53,7 +53,7 @@ class ShowImage(Frame):
         self.canvas.bind("<B1-Motion>", self.Draw)
         self.master.drawstatus = True
 
-    def DesactivateDraw(self):
+    def DisactivateDraw(self):
 
         self.canvas.unbind("<ButtonPress>")
         self.canvas.unbind("<B1-Motion>")
@@ -84,7 +84,7 @@ class ShowImage(Frame):
         self.canvas.bind("<ButtonRelease>",self.EndCrop)
         self.master.cropstatus = True
     
-    def DesactivateCrop(self):
+    def DisactivateCrop(self):
         self.canvas.unbind("<ButtonPress-1>")
         self.canvas.unbind("<B1-Motion>")
         self.canvas.unbind("<ButtonRelease>")

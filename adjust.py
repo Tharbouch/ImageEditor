@@ -39,9 +39,9 @@ class Adjust(Toplevel):
         self.ColorScale .set(1)
         self.ColorScale .pack() 
         
-        self.PreviewButtton = Button(self, text="Preview")
-        self.PreviewButtton .bind("<ButtonRelease>", self.preview)
-        self.PreviewButtton .pack(side=BOTTOM)
+        self.PreviewButton = Button(self, text="Preview")
+        self.PreviewButton .bind("<ButtonRelease>" ,self.preview)
+        self.PreviewButton .pack(side=BOTTOM)
           
         self.ApllyButton = Button(self, text="Apply")
         self.ApllyButton .bind("<ButtonRelease>", self.apply)
@@ -50,11 +50,12 @@ class Adjust(Toplevel):
         self.CloseButton = Button(self, text="Cancel")
         self.CloseButton .bind("<ButtonRelease>", self.close)
         self.CloseButton .pack(side= RIGHT)
+
     
     def apply(self,event):
         self.master.BackUpImage = self.master.EditedImage 
         self.master.EditedImage = self.ProcessingImage
-
+    
     def preview(self,event):
         BrightnessEnhancer   = ImageEnhance.Brightness(self.OriginalImage)
         brightness = BrightnessEnhancer.enhance(self.BrightnessScale.get())
@@ -78,8 +79,6 @@ class Adjust(Toplevel):
 
         self.ProcessingImage = GammaPillowImage
         self.master.viewimage.ShowImage(img=self.ProcessingImage)
-        self.AdjustEdited = True
-
 
     def close(self,event):
         self.master.viewimage.ShowImage()
