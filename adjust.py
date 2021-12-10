@@ -78,7 +78,7 @@ class Adjust(Toplevel):
         GammaPillowImage = Image.fromarray(GammaCvImage)
 
         self.ProcessingImage = GammaPillowImage
-        self.master.viewimage.ShowImage(img=self.ProcessingImage)
+        self.master.viewimage.ShowImage(Img=self.ProcessingImage)
 
     def close(self,event):
         self.master.viewimage.ShowImage()

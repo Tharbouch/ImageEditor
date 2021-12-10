@@ -5,94 +5,87 @@ import numpy as np
 class Filters(Toplevel):
     def __init__(self,master=None):
         Toplevel.__init__(self,master=master)
+        
         self.image = np.asarray(self.master.EditedImage)
         self.FiltredImageCV = None
         self.FiltredImagePIL = None
 
-        self.negative_button      = Button(master=self, text="Negative")
-        self.black_white_button   = Button(master=self, text="Black White")
-        self.sepia_button         = Button(master=self, text="Sepia")
-        self.gaussian_blur_button = Button(master=self, text="Gaussian Blur")
-        self.median_blur_button   = Button(master=self, text="Median Blur")
-        self.cancel_button        = Button(master=self, text="Cancel")
-        self.apply_button         = Button(master=self, text="Apply")
+        self.NegativeButton      = Button(master=self, text="Negative"      )
+        self.BlackWhiteButton    = Button(master=self, text="Black White"   )
+        self.SepiaButton         = Button(master=self, text="Sepia"         )
+        self.EdgeDetectionButton = Button(master=self, text="Edge Detection")
+        self.GaussianBlurButton  = Button(master=self, text="Gaussian Blur" )
+        self.MedianBlurButton    = Button(master=self, text="Median Blur"   )
+        self.CancelButton        = Button(master=self, text="Cancel"        )
+        self.ApplyButton         = Button(master=self, text="Apply"         )
 
-        self.negative_button      .bind("<ButtonRelease-1>", self.negative_button_released)
-        self.black_white_button   .bind("<ButtonRelease-1>", self.black_white_released)
-        self.sepia_button         .bind("<ButtonRelease-1>", self.sepia_button_released)
-        self.gaussian_blur_button .bind("<ButtonRelease-1>", self.gaussian_blur_button_released)
-        self.median_blur_button   .bind("<ButtonRelease-1>", self.median_blur_button_released)
-        self.apply_button         .bind("<ButtonRelease-1>", self.apply_button_released)
-        self.cancel_button        .bind("<ButtonRelease-1>", self.cancel_button_released)
+        self.NegativeButton       .bind("<ButtonRelease-1>", self.Negative     )
+        self.BlackWhiteButton     .bind("<ButtonRelease-1>", self.BlackWhite   )
+        self.SepiaButton          .bind("<ButtonRelease-1>", self.Sepia        )
+        self.EdgeDetectionButton  .bind("<ButtonRelease-1>", self.EdgeDetection)
+        self.GaussianBlurButton   .bind("<ButtonRelease-1>", self.GaussianBlur )
+        self.MedianBlurButton     .bind("<ButtonRelease-1>", self.MedianBlur   )
+        self.CancelButton         .bind("<ButtonRelease-1>", self.Cancel       )
+        self.ApplyButton          .bind("<ButtonRelease-1>", self.Apply        )
 
-        self.negative_button      .pack()
-        self.black_white_button   .pack()
-        self.sepia_button         .pack()
-        self.gaussian_blur_button .pack()
-        self.median_blur_button   .pack()
-        self.cancel_button        .pack(side=RIGHT)
-        self.apply_button         .pack()
+        self.NegativeButton       .pack()
+        self.BlackWhiteButton     .pack()
+        self.SepiaButton          .pack()
+        self.EdgeDetectionButton  .pack()
+        self.GaussianBlurButton   .pack()
+        self.MedianBlurButton     .pack()
+        self.CancelButton         .pack(side=RIGHT)
+        self.ApplyButton          .pack()
 
-    def negative_button_released(self, event):
-        self.negative()
-        self.ShowImage()
-
-    def black_white_released(self, event):
-        self.black_white()
-        self.ShowImage()
-
-    def sepia_button_released(self, event):
-        self.sepia()
-        self.ShowImage()
-
-    def gaussian_blur_button_released(self, event):
-        self.gaussian_blur()
-        self.ShowImage()
-
-    def median_blur_button_released(self, event):
-        self.gaussian_blur()
-        self.ShowImage()
-
-    def apply_button_released(self, event):
+    def Apply(self, event):
         self.master.BackUpImage = self.master.EditedImage 
         self.master.EditedImage = self.FiltredImagePIL
-        self.ShowImage()
-        self.close()
+        self.Show()
+        self.Close()
 
-    def cancel_button_released(self, event):
+    def Cancel(self, event):
         self.master.viewimage.ShowImage()
-        self.close()
+        self.Close()
 
-    def ShowImage(self):
-        self.master.viewimage.ShowImage(img=self.FiltredImagePIL)
+    def Show(self):
+        self.master.viewimage.ShowImage(Img=self.FiltredImagePIL)
 
-    def negative(self):
+    def Negative(self,event):
         self.FiltredImageCV = cv2.bitwise_not(self.image)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
+        self.Show()
 
-    def black_white(self):
+    def BlackWhite(self,event):
         self.FiltredImageCV  = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         self.FiltredImageCV  = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
+        self.Show()
 
-
-    def sepia(self):
+    def Sepia(self,event):
         kernel = np.array([[0.193, 0.369, 0.189],
                             [0.249, 0.286, 0.168],
                             [0.172, 0.334, 0.131]])
 
         self.FiltredImageCV = cv2.filter2D(self.image, -1, kernel)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
+        self.Show()
 
+    def EdgeDetection(self,event):
+        self.FiltredImageCV  = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+        img = cv2.GaussianBlur(self.FiltredImageCV,(3,3),0)
+        self.FiltredImageCV = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=5)
+        self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
+        self.Show()
 
-    def gaussian_blur(self):
+    def GaussianBlur(self,event):
         self.FiltredImageCV = cv2.GaussianBlur(self.image, (41, 41), 0)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
-
-    def median_blur(self):
+        self.Show()
+    
+    def MedianBlur(self,event):
         self.FiltredImageCV = cv2.medianBlur(self.image, 41)
         self.FiltredImagePIL = Image.fromarray(self.FiltredImageCV)
+        self.Show()
 
-
-    def close(self):
+    def Close(self):
         self.destroy()

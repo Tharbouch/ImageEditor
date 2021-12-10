@@ -9,17 +9,16 @@ class Main(Tk):
         self.OriginalImage = None
         self.EditedImage = None
         self.BackUpImage = None
-        self.ImageIsSelected = False
-        self.drawstatus = False
-        self.cropstatus = False
+        self.DrawStatus = False
+        self.CropStatus = False
 
         Tk.__init__(self)
         self.title('Image Editor')
         self.iconphoto(True,PhotoImage(file="icon.png"))
         self.geometry(f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}')
         self.config(background='#3d4453')
-        self.buttons = EditingButtons(master=self)
-        self.buttons.pack(pady=20)
+        self.Functions = EditingButtons(master=self)
+        self.Functions.pack(pady=20)
         
         separator = ttk.Separator(master=self, orient=HORIZONTAL)
         separator.pack(fill=X ,padx=10 , pady=20)
@@ -29,4 +28,3 @@ class Main(Tk):
         
 window = Main()
 window.mainloop()
-

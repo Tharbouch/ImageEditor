@@ -30,22 +30,22 @@ class Rotate(Toplevel):
     def RotateLEFT90(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.ROTATE_90)
         self.master.EditedImage = self.RotateImage
-        self.master.viewimage.ShowImage(img=self.RotateImage)
+        self.master.viewimage.ShowImage(Img=self.RotateImage)
     def RotateRIGHT90(self,event):
         CvImage = np.array(self.master.EditedImage)
         self.RotateImage = cv2.rotate(CvImage, cv2.ROTATE_90_CLOCKWISE)
         self.master.EditedImage = Image.fromarray(self.RotateImage) 
         self.RotateImage = self.master.EditedImage
-        self.master.viewimage.ShowImage(img=self.RotateImage)
+        self.master.viewimage.ShowImage(Img=self.RotateImage)
     def Rotate180(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.ROTATE_180)
-        self.master.viewimage.ShowImage(img=self.RotateImage)
+        self.master.viewimage.ShowImage(Img=self.RotateImage)
         self.master.EditedImage = self.RotateImage
     def FilpHorizontale(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.FLIP_LEFT_RIGHT)
-        self.master.viewimage.ShowImage(img=self.RotateImage)
+        self.master.viewimage.ShowImage(Img=self.RotateImage)
         self.master.EditedImage = self.RotateImage
     def FlipVertical(self,event):
         self.RotateImage = self.master.EditedImage.transpose(Image.FLIP_TOP_BOTTOM)
-        self.master.viewimage.ShowImage(img=self.RotateImage)
+        self.master.viewimage.ShowImage(Img=self.RotateImage)
         self.master.EditedImage = self.RotateImage

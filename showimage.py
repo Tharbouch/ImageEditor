@@ -12,57 +12,57 @@ class ShowImage(Frame):
         self.StartingPoint2 = 0
         self.EndingPoint1   = 0
         self.EndingPoint2   = 0
-        self.ratio = 0
+        self.Ratio = 0
         
         Frame.__init__(self,master=master , bg='#3d4453')
-        self.shown_image = None
+        self.MainImage = None
         self.canvas = Canvas(self,  bg='#3d4453', highlightthickness=0)
         self.canvas.place(relx = 0.5 , rely=0.45, anchor=CENTER)
   
-    def ShowImage(self, img=None):
+    def ShowImage(self, Img=None):
 
-        if img is None:
-            image = self.master.EditedImage.copy()
+        if Img is None:
+            Image = self.master.EditedImage.copy()
         else:
-            image = img
+            Image = Img
 
-        width , height = image.size
+        Width , Height = Image.size
         
-        ratio = height / width
+        Ratio = Height / Width
 
-        new_width = width
-        new_height = height
+        NewWidth = Width
+        NewHeight = Height
 
-        if height > 1280 or width > 800:
-            if ratio < 1:
-                new_width = 1280
-                new_height = int(new_width * ratio)
+        if Height > 1280 or Width > 800:
+            if Ratio < 1:
+                NewWidth = 1280
+                NewHeight = int(NewWidth * Ratio)
             else:
-                new_height = 800
-                new_width = int(new_height * (width / height))
-        self.ratio =  height / new_height
-        self.shown_image = image.resize((new_width, new_height))
-        self.shown_image = ImageTk.PhotoImage(self.shown_image)
+                NewHeight = 800
+                NewWidth = int(NewHeight * (Width / Height))
+        self.Ratio =  Height / NewHeight
+        self.MainImage = Image.resize((NewWidth, NewHeight))
+        self.MainImage = ImageTk.PhotoImage(self.MainImage)
 
-        self.canvas.config(width= new_width, height= new_height)
-        self.canvas.create_image(new_width/2 , new_height/2, anchor=CENTER, image=self.shown_image , bg=None)
+        self.canvas.config(width= NewWidth, height= NewHeight)
+        self.canvas.create_image(NewWidth/2 , NewHeight/2, anchor=CENTER, image=self.MainImage , bg=None)
    
     def StartDrawing(self):
         self.master.BackUpImage = self.master.EditedImage
         self.canvas.bind("<ButtonPress-1>", self.DrawCordinates)
         self.canvas.bind("<B1-Motion>", self.Draw)
-        self.master.drawstatus = True
+        self.master.DrawStatus = True
 
-    def DisactivateDraw(self):
+    def DeactivateDraw(self):
 
         self.canvas.unbind("<ButtonPress>")
         self.canvas.unbind("<B1-Motion>")
-        self.master.drawstatus = False
+        self.master.DrawStatus = False
 
         x = self.winfo_rootx()+self.canvas.winfo_x()+2
         y = self.winfo_rooty()+self.canvas.winfo_y()+2
-        x1 = x + self.shown_image.width()-2
-        y1 = y + self.shown_image.height()-2
+        x1 = x + self.MainImage.width()-2
+        y1 = y + self.MainImage.height()-2
         self.master.EditedImage = ImageGrab.grab((x ,y ,x1,y1))
 
     def DrawCordinates(self, event):
@@ -78,23 +78,23 @@ class ShowImage(Frame):
 
     def StarCrop(self):
         self.master.BackUpImage = self.master.EditedImage 
-        
+
         self.canvas.bind("<ButtonPress-1>",self.CropCordinates)
-        self.canvas.bind("<B1-Motion>",self.crop)
+        self.canvas.bind("<B1-Motion>",self.CropRectangele)
         self.canvas.bind("<ButtonRelease>",self.EndCrop)
-        self.master.cropstatus = True
+        self.master.CropStatus = True
     
-    def DisactivateCrop(self):
+    def DeactivateCrop(self):
         self.canvas.unbind("<ButtonPress-1>")
         self.canvas.unbind("<B1-Motion>")
         self.canvas.unbind("<ButtonRelease>")
-        self.master.cropstatus = False
+        self.master.CropStatus = False
 
     def CropCordinates(self,event):
         self.StartingPoint1 = event.x
         self.StartingPoint2 = event.y
         
-    def crop(self,event):
+    def CropRectangele(self,event):
         if self.CropSquer:
             self.canvas.delete(self.CropSquer)
         self.EndingPoint1 = event.x
@@ -104,32 +104,33 @@ class ShowImage(Frame):
     def EndCrop(self,event):
         self.CropedImage = np.array(self.master.EditedImage)
         if self.StartingPoint1  <= self.EndingPoint1 and self.StartingPoint2 <= self.EndingPoint2:
-            StartingPoint1 = int(self.StartingPoint1  * self.ratio)
-            StartingPoint2 = int(self.StartingPoint2 * self.ratio)
-            EndingPoint1   = int(self.EndingPoint1 * self.ratio)
-            EndingPoint2   = int(self.EndingPoint2 * self.ratio)
+            StartingPoint1 = int(self.StartingPoint1 * self.Ratio)
+            StartingPoint2 = int(self.StartingPoint2 * self.Ratio)
+            EndingPoint1   = int(self.EndingPoint1   * self.Ratio)
+            EndingPoint2   = int(self.EndingPoint2   * self.Ratio)
         elif self.StartingPoint1  > self.EndingPoint1 and self.StartingPoint2 <= self.EndingPoint2:
-            StartingPoint1 = int(self.StartingPoint1  * self.ratio)
-            StartingPoint2 = int(self.StartingPoint2 * self.ratio)
-            EndingPoint1   = int(self.EndingPoint1 * self.ratio)
-            EndingPoint2   = int(self.EndingPoint2 * self.ratio)
+            StartingPoint1 = int(self.StartingPoint1 * self.Ratio)
+            StartingPoint2 = int(self.StartingPoint2 * self.Ratio)
+            EndingPoint1   = int(self.EndingPoint1   * self.Ratio)
+            EndingPoint2   = int(self.EndingPoint2   * self.Ratio)
 
         elif self.StartingPoint1  <= self.EndingPoint1 and self.StartingPoint2 > self.EndingPoint2:
-            StartingPoint1 = int(self.StartingPoint1  * self.ratio)
-            StartingPoint2 = int(self.EndingPoint2 * self.ratio)
-            EndingPoint1   = int(self.EndingPoint1 * self.ratio)
-            EndingPoint2   = int(self.StartingPoint2 * self.ratio)
+            StartingPoint1 = int(self.StartingPoint1 * self.Ratio)
+            StartingPoint2 = int(self.EndingPoint2   * self.Ratio)
+            EndingPoint1   = int(self.EndingPoint1   * self.Ratio)
+            EndingPoint2   = int(self.StartingPoint2 * self.Ratio)
         else:
-            StartingPoint1 = int(self.EndingPoint1 * self.ratio)
-            StartingPoint2 = int(self.EndingPoint2 * self.ratio)
-            EndingPoint1   = int(self.StartingPoint1  * self.ratio)
-            EndingPoint2   = int(self.StartingPoint2 * self.ratio)
+            StartingPoint1 = int(self.EndingPoint1   * self.Ratio)
+            StartingPoint2 = int(self.EndingPoint2   * self.Ratio)
+            EndingPoint1   = int(self.StartingPoint1 * self.Ratio)
+            EndingPoint2   = int(self.StartingPoint2 * self.Ratio)
 
         x = slice(StartingPoint1, EndingPoint1, 1)
         y = slice(StartingPoint2, EndingPoint2, 1)
 
         self.master.EditedImage = Image.fromarray(self.CropedImage[y,x])
         self.ShowImage()
+
                 
     def ClearCanvas(self):
         self.canvas.delete("all")

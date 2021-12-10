@@ -47,28 +47,30 @@ class EditingButtons(Frame):
         self.FiltersButton    .pack(side=LEFT)
         self.UndoButton       .pack(side=LEFT)
         self.ClearButton      .pack()
-
-        self.ChangesSaved = False
-        self.master.protocol("WM_DELETE_WINDOW", self.BeforeClosing)
-
+        
         self.FilesTypesImport = [("All Picture file",("*.bmp","*.png","*.jpeg","*.jpg","*.jpe","*.ico","*.tiff",".*tif","*.webp")) ,("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))]
-        self.FilesTypesSave   = [("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif"))]
-
+        self.FilesTypesSave   = [("Bitmap Files","*.bmp"),("PNG (*.png)","*.png") , ("JPEG (*.jpg,*.jpeg,*.jpe)",("*.jpeg","*.jpg","*.jpe")) , ("ICO (*.ico)","*.ico") , ("WEBP (*.webp)","*.webp"),("TIFF",("*.tiff",".*tif")) ]
+        self.Default = path.join('C:','Users',getlogin(),'Desktop')
+        self.ImageIsSelected = False
+        self.ChangesSaved = False
+        
+        self.master.protocol("WM_DELETE_WINDOW", self.BeforeClosing)
         
     def NewPictureImported(self):
-        filename = filedialog.askopenfilename( initialdir=path.join('C:\\','Users',getlogin(),'Desktop\\'),filetypes=self.FilesTypesImport)
+        filename = filedialog.askopenfilename( initialdir=self.Default,filetypes=self.FilesTypesImport)
         image = Image.open(filename)
 
         if image is not None:
             self.master.filename = filename
             self.master.OriginalImage = image.copy()
             self.master.EditedImage = image.copy()
+            self.master.BackUpImage = image.copy()
             self.type = image.format
             self.master.viewimage.ShowImage()
-            self.master.ImageIsSelected = True
+            self.ImageIsSelected = True
     
     def SavePicture(self):
-        if self.master.ImageIsSelected:
+        if self.ImageIsSelected:
             SavedImage = self.master.EditedImage
             SavedImage.save(self.master.filename,quality=100, optimize=True)
             self.ChangesSaved = True
@@ -78,17 +80,11 @@ class EditingButtons(Frame):
     
 
     def SavePictureAs(self):
-        if self.master.ImageIsSelected:
+        if self.ImageIsSelected:
             try:
-                for i in range(len(self.FilesTypesSave)-1):
-                    if (self.FilesTypesSave[i][0].find(self.type)) != -1:
-                        Type = self.FilesTypesSave[i]
-                        self.FilesTypesSave.pop(i)
-                    else:
-                        pass
-                self.FilesTypesSave.insert(0,Type)
-                Type = None
-                filename = filedialog.asksaveasfilename(filetypes= self.FilesTypesSave,initialdir= path.join('C:\\','Users',getlogin(),'Desktop\\') )
+                
+                filename = filedialog.asksaveasfilename(initialdir= self.Default ,filetypes= self.FilesTypesSave , defaultextension='.png' )
+                
                 self.master.EditedImage.save(filename, quality=100, optimize=True)
                 self.master.filename = filename
                 self.ChangesSaved = True
@@ -104,11 +100,11 @@ class EditingButtons(Frame):
 
     def Rotate(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.RotateButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.rotate_frame = Rotate(master=self.master)
                 self.master.rotate_frame.grab_set()
             else:
@@ -117,11 +113,11 @@ class EditingButtons(Frame):
 
     def StartDraw(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.DrawButton:
-            if self.master.ImageIsSelected:
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
+            if self.ImageIsSelected:
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
                 else:
                     self.master.viewimage.StartDrawing()
             else:
@@ -130,11 +126,11 @@ class EditingButtons(Frame):
 
     def StartCroping(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.CropButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 else:
                     self.master.viewimage.StarCrop()
             else:
@@ -144,11 +140,11 @@ class EditingButtons(Frame):
 
     def EditAdjust(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.AdjustButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.adjust_frame = Adjust(master=self.master)
                 self.master.adjust_frame.grab_set()
             else:
@@ -157,11 +153,11 @@ class EditingButtons(Frame):
 
     def ApplyFilters(self,event):
         if self.winfo_containing(event.x_root, event.y_root) == self.FiltersButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.filters_frame = Filters(master=self.master)
                 self.master.filters_frame.grab_set()  
             else:
@@ -170,11 +166,11 @@ class EditingButtons(Frame):
 
     def Clear(self, event):
         if self.winfo_containing(event.x_root, event.y_root) == self.ClearButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.EditedImage = self.master.OriginalImage.copy()
                 self.master.viewimage.ClearCanvas()
             else:
@@ -183,11 +179,11 @@ class EditingButtons(Frame):
 
     def Undo(self,event):
         if self.winfo_containing(event.x_root , event.y_root) == self.UndoButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 self.master.EditedImage =  self.master.BackUpImage
                 self.master.viewimage.ClearCanvas()
             else:
@@ -196,20 +192,31 @@ class EditingButtons(Frame):
                 
     def ExtractExif(self,event):
         if self.winfo_containing(event.x_root , event.y_root) == self.ExtractExifButton:
-            if self.master.ImageIsSelected:
-                if self.master.drawstatus:
-                    self.master.viewimage.DisactivateDraw()
-                if self.master.cropstatus:
-                    self.master.viewimage.DisactivateCrop()
+            if self.ImageIsSelected:
+                if self.master.DrawStatus:
+                    self.master.viewimage.DeactivateDraw()
+                if self.master.CropStatus:
+                    self.master.viewimage.DeactivateCrop()
                 
-                if self.master.ImageType in ('JPEG','WEBP','TIFF'):
+                if self.type in ('JPEG','WEBP','TIFF'):
+                    filename = self.master.filename.split("/")[-1]
+                    filename = filename.split(".")[0]
+                    
                     try:
                         exif_dict = piexif.load(self.master.filename)
                         thumbnail = exif_dict.pop('thumbnail')
                         if thumbnail is not None:
                             with open(path.join('C:\\','Users',getlogin(),'AppData','Local','Temp','thumbnail.jpg'), 'wb') as f:
                                 f.write(thumbnail)
-                        with open(path.join('C:\\','Users',getlogin(),'Desktop\\','results.txt'), 'w') as f:
+                        with open(path.join('C:\\','Users',getlogin(),'Desktop\\',(filename+".txt")), 'w') as f:
+                            checkvalue = 0
+                            for key,value in exif_dict.items():
+                                if exif_dict[key]:
+                                    pass
+                                else:
+                                    checkvalue = checkvalue+1
+                            if checkvalue == 5:
+                                f.write("Picture doesn't have exif\n\n")   
                             for ifd in exif_dict:
                                 f.write(ifd+":")
                                 f.write('\n')
@@ -223,17 +230,21 @@ class EditingButtons(Frame):
                                     f.write(data)
                                     f.write("\n")
                                 f.write('\n')
-                        messagebox.showinfo(title='Image Editor', message='Data saved on '+path.join('C:\\','Users',getlogin(),'Desktop\\','results.txt'))
+                        messagebox.showinfo(title='Image Editor', message='Data saved on '+path.join('C:\\','Users',getlogin(),'Desktop\\',(filename+".txt")))
                     except ValueError:
-                        messagebox.showinfo(title='Image Editor', message='The image has no exif')
+                        l = ["0th:\n\n","Exif:\n\n","GPS:\n\n","Interop:\n\n","1st:\n\n"]
+                        with open(path.join('C:\\','Users',getlogin(),'Desktop\\',(filename+".txt")), 'w') as f:
+                            f.write("Picture doesn't have exif\n\n")
+                            f.writelines(l)
+                        messagebox.showinfo(title='Image Editor', message='Data saved on '+path.join('C:\\','Users',getlogin(),'Desktop\\',(filename+".txt")))
                 else:
-                    messagebox.showinfo(title='Image Editor', message=' Only JPEG, WebP and TIFF files are supported.')
+                    messagebox.showinfo(title='Image Editor', message=' Only JPEG, WebP and TIFF pictures formats are supported.')
             else:
                 messagebox.showinfo(title='Image Editor', message='Please import a picrure first.')
                 self.NewPictureImported()
 
     def BeforeClosing(self):
-        if self.master.ImageIsSelected:
+        if self.ImageIsSelected:
             if self.ChangesSaved == False:
                 test =  messagebox.askyesnocancel("Image Editor","Do you want to save changes?")
                 if test:
