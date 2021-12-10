@@ -1,3 +1,5 @@
 # ImageEditor
 Small Image editor written with python 
-Using Tkinter,PIL and OpenCv
+Using Tkinter,PIL ,OpenCv ,Os , Piexif
+The application allows the user to edit images and also convert it to different format. 
+the application provide common functions like cropping ,using filters and adjust brightness, contrast and colors. Besides the ability to extract EXIF data.
